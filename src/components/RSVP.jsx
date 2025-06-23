@@ -59,7 +59,10 @@ function RSVP() {
 
   return (
     <>
-      <section data-aos="fade-up" style={{ padding: "2rem", textAlign: "center" }}>
+      <section
+        data-aos="fade-up"
+        style={{ padding: "2rem", textAlign: "center" }}
+      >
         <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
           참석 정보 전달하기
         </h2>
@@ -89,7 +92,13 @@ function RSVP() {
           }}
         >
           <span>신랑 석민</span>
-          <span style={{ color: "red" }}>❤️</span>
+          <span style={{ color: "red" }}>
+            <img
+              src="/images/heart.png"
+              alt="heart"
+              style={{ width: "25px", height: "25px", marginTop: "10px" }}
+            />
+          </span>
           <span>신부 서연</span>
         </div>
         <h3
@@ -111,6 +120,7 @@ function RSVP() {
           style={{
             padding: "1rem",
             background: "#000",
+            fontSize: "1rem",
             color: "#fff",
             border: "none",
             borderRadius: "8px",
@@ -124,7 +134,10 @@ function RSVP() {
         </button>
       </section>
       {/* 공유/복사 섹션 */}
-      <section data-aos="fade-up" style={{ background: "#f5f5f5", padding: "2rem" }}>
+      <section
+        data-aos="fade-up"
+        style={{ background: "#f5f5f5", padding: "2rem" }}
+      >
         <div
           style={{
             maxWidth: "600px",
@@ -224,21 +237,15 @@ function RSVP() {
               }}
             >
               <h3
-                style={{ margin: 0, fontSize: "1.25rem", fontWeight: "bold" }}
+                style={{
+                  margin: 0,
+                  fontSize: "1.25rem",
+                  fontWeight: "bold",
+                  fontFamily: "Pretendard-Regular",
+                }}
               >
                 참석여부 전달하기
               </h3>
-              <button
-                onClick={closeModal}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  fontSize: "1.25rem",
-                  cursor: "pointer",
-                }}
-              >
-                ×
-              </button>
             </div>
             <hr
               style={{ margin: 0, border: "none", borderTop: "1px solid #eee" }}
@@ -254,13 +261,16 @@ function RSVP() {
                 gap: "0.75rem",
               }}
             >
-              {/* 신랑/신부 선택 */}
               <div
                 style={{
                   display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                   background: "#f3f3f3",
-                  borderRadius: "8px",
-                  overflow: "hidden",
+                  borderRadius: "12px",
+                  height: "64px",
+                  gap: "4px",
+                  padding: "0 8px",
                 }}
               >
                 <button
@@ -269,36 +279,46 @@ function RSVP() {
                     dispatch({ type: "SET_SIDE", payload: "groom" })
                   }
                   style={{
-                    flex: 1,
-                    padding: "0.75rem",
-                    background: state.side === "groom" ? "#fff" : "transparent",
-                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    background:
+                      state.side === "groom" ? "#ffffff" : "transparent",
+                    border: "1px solid #ccc",
+                    fontWeight: state.side === "groom" ? "600" : "400",
                     cursor: "pointer",
+                    transition: "all 0.2s ease",
                   }}
                 >
                   신랑측
                 </button>
+
                 <div
                   style={{
-                    padding: "0.75rem",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    padding: "0 8px",
                   }}
                 >
-                  🎂
+                  <img
+                    src="/images/cake.png"
+                    alt="cake"
+                    style={{ width: "24px", height: "24px" }}
+                  />
                 </div>
+
                 <button
                   type="button"
                   onClick={() =>
                     dispatch({ type: "SET_SIDE", payload: "bride" })
                   }
                   style={{
-                    flex: 1,
-                    padding: "0.75rem",
-                    background: state.side === "bride" ? "#fff" : "transparent",
-                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    background:
+                      state.side === "bride" ? "#ffffff" : "transparent",
+                    border: "1px solid #ccc",
+                    fontWeight: state.side === "bride" ? "600" : "400",
                     cursor: "pointer",
+                    transition: "all 0.2s ease",
                   }}
                 >
                   신부측
@@ -342,24 +362,28 @@ function RSVP() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   background: "#f3f3f3",
-                  borderRadius: "8px",
-                  padding: "0.75rem",
+                  borderRadius: "12px",
+                  padding: "0.75rem 1rem",
                 }}
               >
-                <label style={{ margin: 0 }}>참석여부</label>
-                <div>
+                <label style={{ margin: 0, fontWeight: "500" }}>참석여부</label>
+                <div style={{ display: "flex", gap: "8px" }}>
                   <button
                     type="button"
                     onClick={() =>
                       dispatch({ type: "SET_ATTENDING", payload: "참석" })
                     }
                     style={{
-                      marginRight: "0.5rem",
-                      padding: "0.5rem 1rem",
+                      padding: "8px 16px",
+                      borderRadius: "8px",
                       background:
-                        state.isAttending === "참석" ? "#fff" : "transparent",
-                      border: "none",
+                        state.isAttending === "참석"
+                          ? "#ffffff"
+                          : "transparent",
+                      border: "1px solid #ccc",
+                      fontWeight: state.isAttending === "참석" ? "600" : "400",
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
                     }}
                   >
                     참석
@@ -370,11 +394,16 @@ function RSVP() {
                       dispatch({ type: "SET_ATTENDING", payload: "불참" })
                     }
                     style={{
-                      padding: "0.5rem 1rem",
+                      padding: "8px 16px",
+                      borderRadius: "8px",
                       background:
-                        state.isAttending === "불참" ? "#fff" : "transparent",
-                      border: "none",
+                        state.isAttending === "불참"
+                          ? "#ffffff"
+                          : "transparent",
+                      border: "1px solid #ccc",
+                      fontWeight: state.isAttending === "불참" ? "600" : "400",
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
                     }}
                   >
                     불참
@@ -419,24 +448,26 @@ function RSVP() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   background: "#f3f3f3",
-                  borderRadius: "8px",
-                  padding: "0.75rem",
+                  borderRadius: "12px",
+                  padding: "0.75rem 1rem",
                 }}
               >
-                <label style={{ margin: 0 }}>식사예정</label>
-                <div>
+                <label style={{ margin: 0, fontWeight: "500" }}>식사예정</label>
+                <div style={{ display: "flex", gap: "8px" }}>
                   <button
                     type="button"
                     onClick={() =>
                       dispatch({ type: "SET_MEAL", payload: "참석" })
                     }
                     style={{
-                      marginRight: "0.5rem",
-                      padding: "0.5rem 1rem",
+                      padding: "8px 16px",
+                      borderRadius: "8px",
                       background:
-                        state.meal === "참석" ? "#fff" : "transparent",
-                      border: "none",
+                        state.meal === "참석" ? "#ffffff" : "transparent",
+                      border: "1px solid #ccc",
+                      fontWeight: state.meal === "참석" ? "600" : "400",
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
                     }}
                   >
                     참석
@@ -447,11 +478,14 @@ function RSVP() {
                       dispatch({ type: "SET_MEAL", payload: "불참" })
                     }
                     style={{
-                      padding: "0.5rem 1rem",
+                      padding: "8px 16px",
+                      borderRadius: "8px",
                       background:
-                        state.meal === "불참" ? "#fff" : "transparent",
-                      border: "none",
+                        state.meal === "불참" ? "#ffffff" : "transparent",
+                      border: "1px solid #ccc",
+                      fontWeight: state.meal === "불참" ? "600" : "400",
                       cursor: "pointer",
+                      transition: "all 0.2s ease",
                     }}
                   >
                     불참
@@ -511,6 +545,7 @@ function RSVP() {
                   marginTop: "1rem",
                   padding: "0.75rem",
                   background: "#000",
+                  fontSize: "1rem",
                   color: "#fff",
                   border: "none",
                   borderRadius: "4px",

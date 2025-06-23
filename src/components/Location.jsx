@@ -27,7 +27,9 @@ function Location() {
       }}
     >
       {/* 상단 레이블 + 제목 */}
-      <h4 style={{ letterSpacing: "0.2em", margin: 0 }}>LOCATION</h4>
+      <h4 style={{ letterSpacing: "0.2em", marginBottom: "1.5rem" }}>
+        LOCATION
+      </h4>
       <h2 style={{ fontSize: "2.5rem", margin: "0.5rem 0" }}>식장위치</h2>
 
       {/* 장소명 + 주소 */}
@@ -91,7 +93,13 @@ function Location() {
             marginBottom: "1.5rem",
           }}
         >
-          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>🚇</span>
+          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>
+            <img
+              src="/images/train.png"
+              alt="train"
+              style={{ width: "20px", height: "20px", marginBottom: "5px" }}
+            />
+          </span>
           <div>
             <strong>지하철</strong>
             <br />
@@ -100,7 +108,13 @@ function Location() {
         </div>
 
         <div style={{ display: "flex", alignItems: "flex-start" }}>
-          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>🚗</span>
+          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>
+            <img
+              src="/images/car.png"
+              alt="car"
+              style={{ width: "20px", height: "20px", marginBottom: "5px" }}
+            />
+          </span>
           <div>
             <strong>주차 안내</strong>
             <br />

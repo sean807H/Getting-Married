@@ -61,7 +61,8 @@ function GuestBook() {
   };
 
   return (
-    <section data-aos="fade-up"
+    <section
+      data-aos="fade-up"
       style={{
         padding: "2rem",
         maxWidth: "600px",
@@ -69,7 +70,9 @@ function GuestBook() {
         textAlign: "center",
       }}
     >
-      <h4 style={{ letterSpacing: "0.2em", margin: 0 }}>GUESTBOOK</h4>
+      <h4 style={{ letterSpacing: "0.2em", marginBottom: "1.5rem" }}>
+        GUESTBOOK
+      </h4>
       <h2 style={{ fontSize: "2.5rem", margin: "0.5rem 0 1.5rem" }}>방명록</h2>
 
       {pagedEntries.length === 0 ? (
@@ -188,7 +191,13 @@ function GuestBook() {
             marginBottom: "0.75rem",
           }}
         >
-          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>💍</span>
+          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>
+            <img
+              src="/images/ring.png"
+              alt="ring"
+              style={{ width: "30px", height: "30px", marginTop: "10px" }}
+            />
+          </span>
           <strong style={{ fontSize: "1rem" }}>마음전하실 곳(계좌번호)</strong>
         </div>
         <hr
@@ -239,8 +248,7 @@ function GuestBook() {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.3)",
+            height: "60vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -323,8 +331,7 @@ function GuestBook() {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.3)",
+            height: "60vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

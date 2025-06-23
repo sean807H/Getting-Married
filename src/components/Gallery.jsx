@@ -18,7 +18,7 @@ function Gallery() {
       }}
     >
       {/* 상단 레이블 + 제목 */}
-      <h4 style={{ letterSpacing: "0.2em", margin: 0 }}>GALLERY</h4>
+      <h4 style={{ letterSpacing: "0.2em", marginBottom: "1.5rem" }}>GALLERY</h4>
       <h2 style={{ fontSize: "2.5rem", margin: "0.5rem 0" }}>우리의 추억</h2>
 
       {/* 이미지 그리드 */}

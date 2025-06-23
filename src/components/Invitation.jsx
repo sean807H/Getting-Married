@@ -14,7 +14,7 @@ function Invitation() {
         style={{
           fontSize: "1rem",
           letterSpacing: "0.2em",
-          marginBottom: "0.5rem",
+          marginBottom: "1.5rem",
         }}
       >
         INVITATION

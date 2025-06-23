@@ -47,7 +47,8 @@ function Countdown() {
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
   return (
-    <section data-aos="fade-up"
+    <section
+      data-aos="fade-up"
       style={{
         padding: "2rem",
         textAlign: "center",
@@ -56,7 +57,9 @@ function Countdown() {
       }}
     >
       {/* 헤더 */}
-      <h4 style={{ letterSpacing: "0.2em", margin: 0 }}>WEDDING DAY</h4>
+      <h4 style={{ letterSpacing: "0.2em", marginBottom: "1.5rem" }}>
+        WEDDING DAY
+      </h4>
       <h2
         style={{
           fontSize: "3rem",
@@ -120,16 +123,23 @@ function Countdown() {
                 <span
                   style={{
                     position: "absolute",
-                    top: "45%",
+                    top: "60%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     fontSize: "2rem",
-                    color: "rgba(255, 192, 203, 0.3)", // 흐릿한 핑크 하트
                     zIndex: 0,
                     pointerEvents: "none",
                   }}
                 >
-                  ❤️
+                  <img
+                    src="/images/heart.png"
+                    alt="heart"
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      filter: "blur(3px)",
+                    }}
+                  />
                 </span>
               )}
               <span style={{ position: "relative", zIndex: 1 }}>{d}</span>
@@ -191,9 +201,15 @@ function Countdown() {
       </div>
 
       {/* 문구 */}
-      <p style={{ fontSize: "1rem" }}>
-        석민❤️서연의 결혼식이{" "}
-        <span style={{ color: "red" }}>{timeLeft.days}</span>일 남았습니다
+      <p style={{ fontSize: "1rem", marginTop: "2rem" }}>
+        석민{" "}
+        <img
+          src="/images/heart.png"
+          alt="heart"
+          style={{ width: "15px", height: "15px" }}
+        />{" "}
+        서연의 결혼식이 <span style={{ color: "red" }}>{timeLeft.days}</span>일
+        남았습니다
       </p>
     </section>
   );
