@@ -1,8 +1,24 @@
-import React from "react";
+import { React, useEffect } from "react";
 
 function Location() {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (window.daum?.roughmap) {
+        new window.daum.roughmap.Lander({
+          timestamp: "1750681298368",
+          key: "433rdt8adcy",
+          mapWidth: "100%",
+          mapHeight: "330",
+        }).render();
+      }
+    }, 100); // 100ms 지연
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <section data-aos="fade-up"
+    <section
+      data-aos="fade-up"
       style={{
         padding: "2rem",
         textAlign: "center",
@@ -22,31 +38,19 @@ function Location() {
         서울 서초구 남부순환로289길 5 5층
       </p>
 
-      {/* 지도 (일단 크기만 줄여놓음) */}
       <div
-        style={{
-          position: "relative",
-          paddingBottom: "56.25%" /* 16:9 비율 */,
-          height: 0,
-          marginBottom: "1rem",
-        }}
-      >
-        <iframe
-          title="카카오맵"
-          src="https://kko.kakao.com/AZ4zR39ku1"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            border: 0,
-          }}
-        />
-      </div>
+        id="daumRoughmapContainer1750681298368"
+        className="root_daum_roughmap root_daum_roughmap_landing"
+        style={{ width: "100%", height: "330px", margin: "0 auto" }}
+      ></div>
 
-      {/* 카카오맵 버튼 */}
       <button
+        onClick={() => {
+          window.open(
+            "https://map.kakao.com/link/search/세인트메리스 강남",
+            "_blank"
+          );
+        }}
         style={{
           width: "100%",
           padding: "0.75rem",
@@ -56,8 +60,17 @@ function Location() {
           fontSize: "1rem",
           marginBottom: "2rem",
           cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "0.5rem",
         }}
       >
+        <img
+          src="/images/map.png"
+          alt="지도 아이콘"
+          style={{ width: "20px", height: "20px" }}
+        />
         카카오맵
       </button>
 
