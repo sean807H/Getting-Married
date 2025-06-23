@@ -61,7 +61,7 @@ function GuestBook() {
   };
 
   return (
-    <section
+    <section data-aos="fade-up"
       style={{
         padding: "2rem",
         maxWidth: "600px",

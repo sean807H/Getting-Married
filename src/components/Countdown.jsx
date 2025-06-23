@@ -47,7 +47,7 @@ function Countdown() {
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
   return (
-    <section
+    <section data-aos="fade-up"
       style={{
         padding: "2rem",
         textAlign: "center",

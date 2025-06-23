@@ -2,7 +2,7 @@ import React from "react";
 
 function Invitation() {
   return (
-    <section
+    <section data-aos="fade-up"
       style={{
         padding: "4rem 1rem",
         textAlign: "center",

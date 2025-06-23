@@ -59,7 +59,7 @@ function RSVP() {
 
   return (
     <>
-      <section style={{ padding: "2rem", textAlign: "center" }}>
+      <section data-aos="fade-up" style={{ padding: "2rem", textAlign: "center" }}>
         <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
           참석 정보 전달하기
         </h2>
@@ -124,7 +124,7 @@ function RSVP() {
         </button>
       </section>
       {/* 공유/복사 섹션 */}
-      <section style={{ background: "#f5f5f5", padding: "2rem" }}>
+      <section data-aos="fade-up" style={{ background: "#f5f5f5", padding: "2rem" }}>
         <div
           style={{
             maxWidth: "600px",
