@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
+import axios from "axios";
 import useCopyClipboard from "../../hooks/useCopyClipboard";
 
 const initialState = {
@@ -34,19 +35,25 @@ function rsvpReducer(state, action) {
 }
 
 function RSVP() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:3000/rsvp", state);
+      alert("참석 정보가 저장되었습니다!");
+      dispatch({ type: "RESET" });
+      closeModal();
+    } catch (err) {
+      console.error("RSVP 저장 실패:", err);
+      alert("저장 실패");
+    }
+  };
+
   const [state, dispatch] = useReducer(rsvpReducer, initialState);
   const [modalOpen, setModalOpen] = useState(false);
   const [copyURL, copiedURL] = useCopyClipboard();
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("RSVP 정보:", state);
-    // TODO: 서버에 POST 등 실제 전달 로직
-    dispatch({ type: "RESET" });
-    closeModal();
-  };
   // 청첩장 URL 복사
   const handleCopyLink = () => {
     copyURL(window.location.href);

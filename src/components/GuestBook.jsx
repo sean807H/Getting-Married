@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import useCopyClipboard from "../../hooks/useCopyClipboard";
 
 const accounts = {
@@ -19,6 +20,47 @@ const accounts = {
 };
 
 function GuestBook() {
+  const submitMessage = async () => {
+    if (!form.name || !form.message) return;
+
+    try {
+      await axios.post("http://localhost:3000/guestbook", {
+        ...form,
+        // date는 빼기
+      });
+      setForm({ name: "", message: "" });
+      setMsgModalOpen(false);
+      fetchEntries();
+    } catch (err) {
+      console.error("작성 오류:", err);
+    }
+  };
+
+  const deleteEntry = async (index) => {
+    const id = entries[(currentPage - 1) * entriesPerPage + index]?.id;
+    if (!id) return;
+
+    try {
+      await axios.delete(`http://localhost:3000/guestbook/${id}`);
+      fetchEntries();
+    } catch (err) {
+      console.error("삭제 오류:", err);
+    }
+  };
+
+  const fetchEntries = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/guestbook");
+      setEntries(res.data); // 받아온 목록 저장
+    } catch (err) {
+      console.error("불러오기 오류:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEntries(); // 페이지 처음 열릴 때 방명록 가져옴
+  }, []);
+
   const [entries, setEntries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
@@ -46,18 +88,6 @@ function GuestBook() {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const deleteEntry = (index) => {
-    setEntries((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const submitMessage = () => {
-    if (!form.name || !form.message) return;
-    const today = new Date().toISOString().split("T")[0].replace(/-/g, ".");
-    setEntries((prev) => [...prev, { ...form, date: today }]);
-    setForm({ name: "", message: "" });
-    setMsgModalOpen(false);
   };
 
   return (
