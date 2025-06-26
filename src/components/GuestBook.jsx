@@ -24,7 +24,7 @@ function GuestBook() {
     if (!form.name || !form.message) return;
 
     try {
-      await axios.post("http://localhost:3000/guestbook", {
+      await axios.post("https://wedding-server-1kyi.onrender.com/guestbook", {
         ...form,
         // date는 빼기
       });
@@ -41,7 +41,7 @@ function GuestBook() {
     if (!id) return;
 
     try {
-      await axios.delete(`http://localhost:3000/guestbook/${id}`);
+      await axios.delete(`https://wedding-server-1kyi.onrender.com/guestbook/${id}`);
       fetchEntries();
     } catch (err) {
       console.error("삭제 오류:", err);
@@ -50,7 +50,7 @@ function GuestBook() {
 
   const fetchEntries = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/guestbook");
+      const res = await axios.get("https://wedding-server-1kyi.onrender.com/guestbook");
       setEntries(res.data); // 받아온 목록 저장
     } catch (err) {
       console.error("불러오기 오류:", err);
@@ -163,7 +163,7 @@ function GuestBook() {
           marginTop: "1.5rem",
         }}
       >
-        <nav style={{ display: "flex", gap: "2rem", marginLeft: "30px" }}>
+        <nav style={{ display: "flex", gap: "2.2rem", marginLeft: "30px" }}>
           {pages.map((p) => (
             <span
               key={p}
@@ -194,9 +194,9 @@ function GuestBook() {
             background: "#000",
             color: "#fff",
             border: "none",
-            padding: "0.75rem 1.5rem",
+            padding: "0.75rem 1.0rem",
             borderRadius: "999px",
-            fontSize: "1rem",
+            fontSize: "0.9rem",
             cursor: "pointer",
           }}
         >

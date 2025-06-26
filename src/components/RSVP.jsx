@@ -38,7 +38,7 @@ function RSVP() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/rsvp", state);
+      await axios.post("https://wedding-server-1kyi.onrender.com/rsvp", state);
       alert("참석 정보가 저장되었습니다!");
       dispatch({ type: "RESET" });
       closeModal();
@@ -53,16 +53,54 @@ function RSVP() {
   const [copyURL, copiedURL] = useCopyClipboard();
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+  const [qrImage, setQrImage] = useState(null);
+  const [shareData, setShareData] = useState(null);
+
+  useEffect(() => {
+    fetch(`https://wedding-server-1kyi.onrender.com/qrcode`)
+      .then((res) => res.json())
+      .then((data) => setQrImage(data.qrImage));
+  }, []);
+
+  useEffect(() => {
+    fetch("https://wedding-server-1kyi.onrender.com/kakao")
+      .then(res => res.json())
+      .then(data => setShareData(data));
+  }, []);
 
   // 청첩장 URL 복사
   const handleCopyLink = () => {
     copyURL(window.location.href);
   };
 
-  // 카카오톡 공유 (SDK 연동은 별도 구현)
+  // 카카오톡 공유
   const handleShareKakao = () => {
-    alert("카카오톡 공유 기능은 구현이 필요합니다.");
+    // 카카오 SDK가 로드되지 않은 경우
+    if (!window.Kakao) {
+      alert("카카오 SDK가 로드되지 않았습니다.");
+      return;
+    }
+  
+    // 아직 초기화되지 않았다면 JavaScript 키로 초기화
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init("13030a78b29bbe8ef5103e6552186830"); // 🔑 이 부분이 '키'를 사용하는 곳!
+    }
+  
+    // 공유할 내용 설정
+    window.Kakao.Link.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "💌 우리 결혼합니다!",
+        description: "소중한 분을 초대합니다. 초대장을 확인해보세요!",
+        imageUrl: "/images/main.png", // 청첩장 대표 이미지 URL
+        link: {
+          mobileWebUrl: "https://getting-married-orcin.vercel.app/",
+          webUrl: "https://getting-married-orcin.vercel.app/",
+        },
+      },
+    });
   };
+  
 
   return (
     <>
@@ -203,9 +241,16 @@ function RSVP() {
             border: "none",
             borderTop: "1px solid #ddd",
             marginTop: "2rem",
-            marginBottom: "50px",
           }}
         />
+        <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
+          <p>청첩장 QR 코드</p>
+          {qrImage ? (
+            <img src={qrImage} alt="QR Code" style={{ width: "150px" }} />
+          ) : (
+            <p>로딩 중...</p>
+          )}
+        </div>
       </section>
 
       {modalOpen && (
