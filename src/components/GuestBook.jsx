@@ -20,53 +20,10 @@ const accounts = {
 };
 
 function GuestBook() {
-  const submitMessage = async () => {
-    if (!form.name || !form.message) return;
-
-    try {
-      await axios.post("https://wedding-server-1kyi.onrender.com/guestbook", {
-        ...form,
-        // date는 빼기
-      });
-      setForm({ name: "", message: "" });
-      setMsgModalOpen(false);
-      fetchEntries();
-    } catch (err) {
-      console.error("작성 오류:", err);
-    }
-  };
-
-  const deleteEntry = async (index) => {
-    const id = entries[(currentPage - 1) * entriesPerPage + index]?.id;
-    if (!id) return;
-
-    try {
-      await axios.delete(`https://wedding-server-1kyi.onrender.com/guestbook/${id}`);
-      fetchEntries();
-    } catch (err) {
-      console.error("삭제 오류:", err);
-    }
-  };
-
-  const fetchEntries = async () => {
-    try {
-      const res = await axios.get("https://wedding-server-1kyi.onrender.com/guestbook");
-      setEntries(res.data); // 받아온 목록 저장
-    } catch (err) {
-      console.error("불러오기 오류:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchEntries(); // 페이지 처음 열릴 때 방명록 가져옴
-  }, []);
-
   const [entries, setEntries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
-
   const pages = [1, 2, 3, 4, 5];
-
   const pagedEntries = entries.slice(
     (currentPage - 1) * entriesPerPage,
     currentPage * entriesPerPage
@@ -76,14 +33,70 @@ function GuestBook() {
   const [selected, setSelected] = useState(null);
   const [copy, copied] = useCopyClipboard();
 
+  const [msgModalOpen, setMsgModalOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", message: "" });
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
+
+  const fetchEntries = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/guestbook");
+      setEntries(res.data);
+    } catch (err) {
+      console.error("불러오기 오류:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEntries();
+  }, []);
+
+  const submitMessage = async () => {
+    if (!form.name || !form.message) return;
+    try {
+      if (isEditMode && editId !== null) {
+        await axios.put(`http://localhost:3000/guestbook/${editId}`, {
+          ...form,
+        });
+      } else {
+        await axios.post("http://localhost:3000/guestbook", {
+          ...form,
+        });
+      }
+      setForm({ name: "", message: "" });
+      setMsgModalOpen(false);
+      setIsEditMode(false);
+      setEditId(null);
+      fetchEntries();
+    } catch (err) {
+      console.error(isEditMode ? "수정 오류:" : "작성 오류:", err);
+    }
+  };
+
+  const deleteEntry = async (index) => {
+    const id = entries[(currentPage - 1) * entriesPerPage + index]?.id;
+    if (!id) return;
+    try {
+      await axios.delete(`http://localhost:3000/guestbook/${id}`);
+      fetchEntries();
+    } catch (err) {
+      console.error("삭제 오류:", err);
+    }
+  };
+
+  const startEdit = (index) => {
+    const entry = entries[(currentPage - 1) * entriesPerPage + index];
+    setForm({ name: entry.name, message: entry.message });
+    setEditId(entry.id);
+    setIsEditMode(true);
+    setMsgModalOpen(true);
+  };
+
   const openModal = (key) => {
     setSelected(accounts[key]);
     setModalOpen(true);
   };
   const closeModal = () => setModalOpen(false);
-
-  const [msgModalOpen, setMsgModalOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", message: "" });
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -112,7 +125,7 @@ function GuestBook() {
       ) : (
         pagedEntries.map((entry, idx) => (
           <div
-            key={idx}
+            key={entry.id}
             style={{
               position: "relative",
               background: "#fff",
@@ -134,23 +147,39 @@ function GuestBook() {
               <strong style={{ fontSize: "1.125rem" }}>{entry.name}</strong>
               <span style={{ color: "#ccc", fontSize: "0.875rem" }}>
                 {entry.date}
-                <span
-                  onClick={() =>
-                    deleteEntry((currentPage - 1) * entriesPerPage + idx)
-                  }
-                  style={{
-                    marginLeft: "0.5rem",
-                    cursor: "pointer",
-                    color: "#aaa",
-                  }}
-                >
-                  ×
-                </span>
               </span>
             </div>
             <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.5 }}>
               {entry.message}
             </p>
+            <div style={{ marginTop: "0.5rem" }}>
+              <button
+                onClick={() => startEdit(idx)}
+                style={{
+                  marginRight: "0.5rem",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #aaa",
+                  borderRadius: "4px",
+                  background: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                수정
+              </button>
+              <button
+                onClick={() => deleteEntry(idx)}
+                style={{
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #f00",
+                  borderRadius: "4px",
+                  background: "#fff0f0",
+                  cursor: "pointer",
+                  color: "#f00",
+                }}
+              >
+                삭제
+              </button>
+            </div>
           </div>
         ))
       )}
@@ -178,18 +207,13 @@ function GuestBook() {
               {p}
             </span>
           ))}
-
-          <span
-            style={{
-              marginLeft: "0.5rem",
-              fontSize: "1rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          ></span>
         </nav>
         <button
-          onClick={() => setMsgModalOpen(true)}
+          onClick={() => {
+            setIsEditMode(false);
+            setForm({ name: "", message: "" });
+            setMsgModalOpen(true);
+          }}
           style={{
             background: "#000",
             color: "#fff",
@@ -221,22 +245,14 @@ function GuestBook() {
             marginBottom: "0.75rem",
           }}
         >
-          <span style={{ fontSize: "1.5rem", marginRight: "0.5rem" }}>
-            <img
-              src="/images/ring.png"
-              alt="ring"
-              style={{ width: "30px", height: "30px", marginTop: "10px" }}
-            />
-          </span>
+          <img
+            src="/images/ring.png"
+            alt="ring"
+            style={{ width: "30px", marginRight: "0.5rem" }}
+          />
           <strong style={{ fontSize: "1rem" }}>마음전하실 곳(계좌번호)</strong>
         </div>
-        <hr
-          style={{
-            border: "none",
-            borderTop: "1px solid #eee",
-            margin: "0.5rem 0 1.5rem",
-          }}
-        />
+        <hr style={{ border: "none", borderTop: "1px solid #eee" }} />
         <button
           onClick={() => openModal("groom")}
           style={{
@@ -248,7 +264,6 @@ function GuestBook() {
             fontSize: "1rem",
             background: "#f9f9f9",
             cursor: "pointer",
-            textAlign: "center",
           }}
         >
           신랑측 계좌번호
@@ -263,13 +278,13 @@ function GuestBook() {
             fontSize: "1rem",
             background: "#f9f9f9",
             cursor: "pointer",
-            textAlign: "center",
           }}
         >
           신부측 계좌번호
         </button>
       </div>
 
+      {/* 계좌번호 모달 */}
       {modalOpen && selected && (
         <div
           onClick={closeModal}
@@ -278,7 +293,7 @@ function GuestBook() {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "60vh",
+            height: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -292,7 +307,6 @@ function GuestBook() {
               maxWidth: "400px",
               background: "#fff",
               borderRadius: "8px",
-              overflow: "hidden",
               boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
             }}
           >
@@ -303,7 +317,6 @@ function GuestBook() {
                 padding: "1rem",
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
               }}
             >
               <span>{selected.title} 마음 전하실 곳</span>
@@ -315,7 +328,6 @@ function GuestBook() {
                   color: "#fff",
                   fontSize: "1.25rem",
                   cursor: "pointer",
-                  lineHeight: 1,
                 }}
               >
                 ×
@@ -343,16 +355,13 @@ function GuestBook() {
               >
                 계좌번호 복사하기
               </button>
-              {copied && (
-                <div style={{ color: "green", marginTop: "0.5rem" }}>
-                  복사되었습니다!
-                </div>
-              )}
+              {copied && <p style={{ color: "green" }}>복사되었습니다!</p>}
             </div>
           </div>
         </div>
       )}
 
+      {/* 방명록 작성/수정 모달 */}
       {msgModalOpen && (
         <div
           onClick={() => setMsgModalOpen(false)}
@@ -361,7 +370,7 @@ function GuestBook() {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "60vh",
+            height: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -375,8 +384,6 @@ function GuestBook() {
               maxWidth: "400px",
               background: "#fff",
               borderRadius: "8px",
-              overflow: "hidden",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
             }}
           >
             <header
@@ -386,7 +393,6 @@ function GuestBook() {
                 padding: "1rem",
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
               }}
             >
               <span>신랑신부에게 축하인사 남겨주세요</span>
@@ -398,7 +404,6 @@ function GuestBook() {
                   color: "#fff",
                   fontSize: "1.25rem",
                   cursor: "pointer",
-                  lineHeight: 1,
                 }}
               >
                 ×
@@ -406,7 +411,7 @@ function GuestBook() {
             </header>
             <div style={{ padding: "1.5rem", textAlign: "left" }}>
               <label style={{ display: "block", marginBottom: "0.5rem" }}>
-                name :
+                이름
               </label>
               <input
                 name="name"
@@ -421,9 +426,9 @@ function GuestBook() {
                 }}
               />
               <label style={{ display: "block", marginBottom: "0.5rem" }}>
-                message :
+                메시지
               </label>
-              <input
+              <textarea
                 name="message"
                 value={form.message}
                 onChange={handleFormChange}
@@ -448,7 +453,7 @@ function GuestBook() {
                   cursor: "pointer",
                 }}
               >
-                메세지 작성하기
+                {isEditMode ? "메시지 수정하기" : "메시지 작성하기"}
               </button>
             </div>
           </div>
